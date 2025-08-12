@@ -9,10 +9,13 @@
 </head>
 <body>
     <h1>Create User</h1>
+
     <form action="/create-user" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <a class="btn btn-primary" href="/create-user" role="button">Create User</a>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Create User</button>
     </form>
 </body>
 </html>
