@@ -5,7 +5,7 @@ import {
   fillDataUser,
   getHomePageService,
   updateUserService,
-} from "../services/user.service";
+} from "services/user.service";
 const getHomePage = async (req: Request, res: Response) => {
   let data = await getHomePageService();
   return res.render("home", { data });

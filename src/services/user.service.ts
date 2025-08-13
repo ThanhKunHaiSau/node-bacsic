@@ -1,5 +1,7 @@
 import { Field } from "./../../node_modules/mysql2/typings/mysql/lib/parsers/typeCast.d";
 import { getConnection } from "../config/database";
+import { PrismaClient, Prisma } from "@prisma/client";
+import { prisma } from "config/client";
 
 const createUserService = async (params: {
   name: string;
@@ -7,22 +9,29 @@ const createUserService = async (params: {
   address: string;
 }) => {
   const { name, email, address } = params;
-  const connection = await getConnection();
   try {
-    const [results] = await connection.query(
-      "INSERT INTO `users` (`name`, `email`, `address`) VALUES (?, ?, ?)",
-      [name, email, address]
-    );
-    return;
+    const checkExis = await prisma.users.findFirst({
+      where: {
+        email: email,
+      },
+    });
+    if (checkExis) return Promise.reject("User already exists");
+    const user = await prisma.users.create({
+      data: {
+        email: email,
+        name: name,
+        address: address,
+      },
+    });
+    return user;
   } catch (err) {
     console.log(err);
     return Promise.reject(err);
   }
 };
 const getHomePageService = async () => {
-  const connection = await getConnection();
   try {
-    const [results, fields] = await connection.query("SELECT * FROM `users`");
+    const results = await prisma.users.findMany();
     return results;
   } catch (err) {
     console.log(err);
@@ -30,9 +39,13 @@ const getHomePageService = async () => {
   }
 };
 const deleteUserService = async (id: string) => {
-  const connection = await getConnection();
   try {
-    await connection.query("DELETE FROM `users` WHERE `id` = ?", [id]);
+    const idUser = Number(id);
+    await prisma.users.delete({
+      where: {
+        id: idUser,
+      },
+    });
   } catch (err) {
     console.log(err);
   }
@@ -49,12 +62,17 @@ const updateUserService = async (
   id: string,
   params: { name: string; email: string; address: string }
 ) => {
-  const connection = await getConnection();
   try {
-    await connection.query(
-      "UPDATE `users` SET `name` = ?, `email` = ?, `address` = ? WHERE `id` = ?",
-      [params.name, params.email, params.address, id]
-    );
+    await prisma.users.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        name: params.name,
+        email: params.email,
+        address: params.address,
+      },
+    });
   } catch (err) {
     console.log(err);
   }
