@@ -6,7 +6,7 @@ export const getConnection = async () => {
     host: "localhost",
     user: "root",
     database: "nodejs",
-    password: "123456", // replace with your actual password
+    password: "123456",
   });
   return connection;
 };

@@ -30,7 +30,6 @@ const editUser = async (req: Request, res: Response) => {
 };
 const handleUpdateUser = async (req: Request, res: Response) => {
   const { id, name, email, address } = req.body;
-  console.log("Updating user:", { id, name, email, address });
   await updateUserService(id, { name, email, address });
   return res.redirect("/");
 };

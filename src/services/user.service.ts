@@ -1,6 +1,3 @@
-import { Field } from "./../../node_modules/mysql2/typings/mysql/lib/parsers/typeCast.d";
-import { getConnection } from "../config/database";
-import { PrismaClient, Prisma } from "@prisma/client";
 import { prisma } from "config/client";
 
 const createUserService = async (params: {
@@ -10,16 +7,16 @@ const createUserService = async (params: {
 }) => {
   const { name, email, address } = params;
   try {
-    const checkExis = await prisma.users.findFirst({
+    const checkExis = await prisma.user.findFirst({
       where: {
-        email: email,
+        username: email,
       },
     });
     if (checkExis) return Promise.reject("User already exists");
-    const user = await prisma.users.create({
+    const user = await prisma.user.create({
       data: {
-        email: email,
-        name: name,
+        username: email,
+        fullName: name,
         address: address,
       },
     });
@@ -31,7 +28,7 @@ const createUserService = async (params: {
 };
 const getHomePageService = async () => {
   try {
-    const results = await prisma.users.findMany();
+    const results = await prisma.user.findMany();
     return results;
   } catch (err) {
     console.log(err);
@@ -41,7 +38,7 @@ const getHomePageService = async () => {
 const deleteUserService = async (id: string) => {
   try {
     const idUser = Number(id);
-    await prisma.users.delete({
+    await prisma.user.delete({
       where: {
         id: idUser,
       },
@@ -51,25 +48,24 @@ const deleteUserService = async (id: string) => {
   }
 };
 const fillDataUser = async (id: string) => {
-  const connection = await getConnection();
-  const [rows] = await connection.query(
-    "SELECT * FROM `users` WHERE `id` = ?",
-    [id]
-  );
-  return rows[0];
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+  return user;
 };
 const updateUserService = async (
   id: string,
   params: { name: string; email: string; address: string }
 ) => {
   try {
-    await prisma.users.update({
+    await prisma.user.update({
       where: {
         id: Number(id),
       },
       data: {
-        name: params.name,
-        email: params.email,
+        username: params.name,
         address: params.address,
       },
     });
