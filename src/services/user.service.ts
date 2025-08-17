@@ -1,23 +1,29 @@
 import { prisma } from "config/client";
 
 const createUserService = async (params: {
-  name: string;
-  email: string;
+  fullname: string;
+  username: string;
   address: string;
+  phone: string;
+  role: string;
+  avatar: string;
 }) => {
-  const { name, email, address } = params;
+  const { fullname, username, address, phone, role, avatar } = params;
   try {
     const checkExis = await prisma.user.findFirst({
       where: {
-        username: email,
+        username: username,
       },
     });
     if (checkExis) return Promise.reject("User already exists");
     const user = await prisma.user.create({
       data: {
-        username: email,
-        fullName: name,
+        username: username,
+        fullName: fullname,
         address: address,
+        phone: phone,
+        accountType: role,
+        avatar: avatar,
       },
     });
     return user;
@@ -73,10 +79,20 @@ const updateUserService = async (
     console.log(err);
   }
 };
+const getRolesService = async () => {
+  try {
+    const roles = await prisma.role.findMany();
+    return roles;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
 export {
   createUserService,
   getHomePageService,
   deleteUserService,
   fillDataUser,
   updateUserService,
+  getRolesService,
 };

@@ -1,4 +1,6 @@
 import express, { Express } from "express";
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 import {
   deleteUser,
   editUser,
@@ -7,15 +9,30 @@ import {
   handleUpdateUser,
   postCreateUser,
 } from "../controllers/user.controller";
+import {
+  getAdminOrderPage,
+  getAdminProductPage,
+  getAdminUserPage,
+  getDashboardPage,
+} from "controllers/admin/dashboard.controller";
 const router = express.Router();
 const initWebRoute = (app: Express) => {
   router.get("/", getHomePage);
 
   router.get("/create-user", getCreateUser);
-  router.post("/create-new-user", postCreateUser);
   router.post("/delete-user/:id", deleteUser);
   router.post("/edit-user/:id", editUser);
   router.post("/update-user", handleUpdateUser);
+  //admin
+  router.post(
+    "/admin/create-new-user",
+    upload.single("avatar"),
+    postCreateUser
+  );
+  router.get("/admin", getDashboardPage);
+  router.get("/admin/user", getAdminUserPage);
+  router.get("/admin/product", getAdminProductPage);
+  router.get("/admin/order", getAdminOrderPage);
   app.use("/", router);
 };
 

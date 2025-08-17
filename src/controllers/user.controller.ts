@@ -4,18 +4,21 @@ import {
   deleteUserService,
   fillDataUser,
   getHomePageService,
+  getRolesService,
   updateUserService,
 } from "services/user.service";
 const getHomePage = async (req: Request, res: Response) => {
   let data = await getHomePageService();
   return res.render("home", { data });
 };
-const getCreateUser = (req: Request, res: Response) => {
-  return res.render("createUser");
+const getCreateUser = async (req: Request, res: Response) => {
+  const roles = await getRolesService();
+  return res.render("admin/user/create", { roles });
 };
 const postCreateUser = async (req: Request, res: Response) => {
-  const { name, email, address } = req.body;
-  await createUserService({ name, email, address });
+  const { fullname, username, address, phone, role } = req.body;
+  const avatar = req.file?.filename;
+  await createUserService({ fullname, username, address, phone, role, avatar });
   return res.redirect("/");
 };
 const deleteUser = async (req: Request, res: Response) => {

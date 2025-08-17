@@ -1,26 +1,22 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE `users` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NULL,
+    `fullName` VARCHAR(255) NULL,
+    `address` VARCHAR(255) NULL,
+    `phone` VARCHAR(255) NULL,
+    `accountType` VARCHAR(255) NULL,
+    `avatar` VARCHAR(255) NULL,
 
-  - You are about to drop the column `email` on the `users` table. All the data in the column will be lost.
-  - You are about to drop the column `name` on the `users` table. All the data in the column will be lost.
-  - Added the required column `username` to the `users` table without a default value. This is not possible if the table is not empty.
-
-*/
--- AlterTable
-ALTER TABLE `users` DROP COLUMN `email`,
-    DROP COLUMN `name`,
-    ADD COLUMN `accountType` VARCHAR(255) NULL,
-    ADD COLUMN `avatar` VARCHAR(255) NULL,
-    ADD COLUMN `fullName` VARCHAR(255) NULL,
-    ADD COLUMN `password` VARCHAR(255) NULL,
-    ADD COLUMN `phone` VARCHAR(255) NULL,
-    ADD COLUMN `username` VARCHAR(255) NOT NULL;
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `roles` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `description` VARCHAR(255) NULL,
+    `description` VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
