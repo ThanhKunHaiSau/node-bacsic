@@ -37,10 +37,14 @@ const deleteUser = async (req: Request, res: Response) => {
 const editUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   const user = await fillDataUser(id);
-  return res.render("editUser", { id, user });
+  console.log(user);
+  const roles = await getRolesService();
+  console.log(roles);
+  return res.render("editUser", { id, user, roles });
 };
 const handleUpdateUser = async (req: Request, res: Response) => {
   const { id, name, email, address } = req.body;
+
   await updateUserService(id, { name, email, address });
   return res.redirect("/");
 };

@@ -13,20 +13,20 @@ const createUserService = async (params: {
   username: string;
   address: string;
   phone: string;
-  role: string;
+  role: number;
   avatar: string;
   password: string;
 }) => {
   const { fullname, username, address, phone, role, avatar, password } = params;
 
   try {
-    const checkExis = await prisma.user.findFirst({
-      where: {
-        username: username,
-      },
-    });
+    // const checkExis = await prisma.user.findFirst({
+    //   where: {
+    //     username: username,
+    //   },
+    // });
     const hashedPassword = await handleHashPassword(password);
-    if (checkExis) return Promise.reject("User already exists");
+    // if (checkExis) return Promise.reject("User already exists");
     const user = await prisma.user.create({
       data: {
         username: username,
@@ -35,6 +35,7 @@ const createUserService = async (params: {
         phone: phone,
         accountType: ACCOUNT_TYPE.SYSTEM,
         avatar: avatar,
+        roleId: +role,
         password: hashedPassword,
       },
     });
