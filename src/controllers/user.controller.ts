@@ -16,15 +16,23 @@ const getCreateUser = async (req: Request, res: Response) => {
   return res.render("admin/user/create", { roles });
 };
 const postCreateUser = async (req: Request, res: Response) => {
-  const { fullname, username, address, phone, role } = req.body;
-  const avatar = req.file?.filename;
-  await createUserService({ fullname, username, address, phone, role, avatar });
-  return res.redirect("/");
+  const { fullname, username, address, phone, role, password } = req.body;
+  const avatar = req.file?.filename ?? null;
+  await createUserService({
+    fullname,
+    username,
+    address,
+    phone,
+    role,
+    avatar,
+    password,
+  });
+  return res.redirect("/admin/user");
 };
 const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   await deleteUserService(id);
-  return res.redirect("/");
+  return res.redirect("/admin/user");
 };
 const editUser = async (req: Request, res: Response) => {
   const { id } = req.params;

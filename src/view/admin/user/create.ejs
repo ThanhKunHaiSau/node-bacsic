@@ -80,6 +80,18 @@
                                                 placeholder="example@email.com"
                                                 required>
                                         </div>
+
+                                        <!-- Thêm trường password -->
+                                        <div class="mb-3">
+                                            <label for="password"
+                                                class="form-label">Password:</label>
+                                            <input type="password" id="password"
+                                                name="password"
+                                                class="form-control"
+                                                placeholder="Enter password"
+                                                required>
+                                        </div>
+
                                         <div class="row">
                                             <div class="mb-3 col-6">
                                                 <label for="inputCity"
@@ -91,7 +103,8 @@
                                             <div class="mb-3 col-6">
                                                 <label
                                                     class="form-label">Role</label>
-                                                <select class="form-select">
+                                                <select class="form-select"
+                                                    name="role">
                                                     <% roles.forEach(function(role) { %>
                                                     <option
                                                         value="<%= role.id %>">
@@ -102,7 +115,6 @@
                                             </div>
                                         </div>
 
-
                                         <div class="mb-3">
                                             <label for="formFile"
                                                 class="form-label">Avatar:</label>
@@ -110,7 +122,6 @@
                                                 type="file" id="avatarFile"
                                                 name="avatar"
                                                 accept=".png, .jpg, .jpeg">
-
                                         </div>
                                         <img style="max-height: 250px; display: none;"
                                             alt="avatar preview"

@@ -1,5 +1,13 @@
 import { prisma } from "config/client";
+import { ACCOUNT_TYPE } from "config/constant";
+import bcrypt from "bcrypt";
+const handleHashPassword = (password: string): Promise<string> => {
+  const saltRounds = 10;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(password, salt);
 
+  return Promise.resolve(hash);
+};
 const createUserService = async (params: {
   fullname: string;
   username: string;
@@ -7,14 +15,17 @@ const createUserService = async (params: {
   phone: string;
   role: string;
   avatar: string;
+  password: string;
 }) => {
-  const { fullname, username, address, phone, role, avatar } = params;
+  const { fullname, username, address, phone, role, avatar, password } = params;
+
   try {
     const checkExis = await prisma.user.findFirst({
       where: {
         username: username,
       },
     });
+    const hashedPassword = await handleHashPassword(password);
     if (checkExis) return Promise.reject("User already exists");
     const user = await prisma.user.create({
       data: {
@@ -22,8 +33,9 @@ const createUserService = async (params: {
         fullName: fullname,
         address: address,
         phone: phone,
-        accountType: role,
+        accountType: ACCOUNT_TYPE.SYSTEM,
         avatar: avatar,
+        password: hashedPassword,
       },
     });
     return user;
@@ -88,6 +100,7 @@ const getRolesService = async () => {
     return [];
   }
 };
+
 export {
   createUserService,
   getHomePageService,
@@ -95,4 +108,5 @@ export {
   fillDataUser,
   updateUserService,
   getRolesService,
+  handleHashPassword,
 };
