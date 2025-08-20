@@ -75,22 +75,13 @@
             <div class="mb-3">
                 <label for="role" class="form-label">Role</label>
                 <select id="role" name="roleId" class="form-select" required>
-                    <% roles.forEach(function(r) { %>
-                    <option value="<%= r.id %>" <ejs>603761
-                        String(user.roleId) === String(r.id) ? 'selected' : ''
-                        %>>
-                        <%= r.name %>
+                    <% roles.map(role => { %>
+                    <option value="<%= role.id %>"
+                        name="roleId">
+                        <%= role.name %>
                     </option>
                     <% }) %>
                 </select>
-            </div>
-
-            <!-- Password (để trống nếu không đổi) -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Password (leave blank
-                    if not changing)</label>
-                <input type="password" id="password" name="password"
-                    class="form-control" placeholder="Enter new password">
             </div>
 
             <!-- Address -->
@@ -111,12 +102,11 @@
 
             <!-- Avatar Preview (đang lưu ở public/images) -->
             <% if (user.avatar) { %><img
-                src="/images/<%= user.avatar %>"
+                src="http://localhost:3000/images/<%= user.avatar %>"
                 alt="User Avatar" class="avatar-preview" id="avatarPreview">
             <% } else { %><img
                 src="http://localhost:3000/images/200x200?text=No+Avatar"
                 alt="No Avatar" class="avatar-preview" id="avatarPreview">
-
 
 
             

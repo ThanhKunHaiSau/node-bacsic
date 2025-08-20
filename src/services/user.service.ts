@@ -74,18 +74,29 @@ const fillDataUser = async (id: string) => {
   });
   return user;
 };
-const updateUserService = async (
-  id: string,
-  params: { name: string; email: string; address: string }
-) => {
+const updateUserService = async (params: {
+  id: string;
+  name: string;
+  address: string;
+  phone: string;
+  avatar: string;
+  roleId: string;
+  fullName: string;
+  username: string;
+}) => {
   try {
     await prisma.user.update({
       where: {
-        id: Number(id),
+        id: Number(params.id),
       },
       data: {
-        username: params.name,
+        username: params.username,
+        fullName: params.fullName,
+        accountType: ACCOUNT_TYPE.SYSTEM,
         address: params.address,
+        phone: params.phone,
+        avatar: params.avatar,
+        roleId: +params.roleId,
       },
     });
   } catch (err) {

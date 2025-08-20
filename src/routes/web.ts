@@ -22,7 +22,7 @@ const initWebRoute = (app: Express) => {
   router.get("/create-user", getCreateUser);
   router.post("/delete-user/:id", deleteUser);
   router.post("/edit-user/:id", editUser);
-  router.post("/update-user", handleUpdateUser);
+  router.post("/update-user", fileUploadMiddleware("avatar"), handleUpdateUser);
   //admin
   router.post(
     "/admin/create-new-user",

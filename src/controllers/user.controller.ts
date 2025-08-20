@@ -37,15 +37,23 @@ const deleteUser = async (req: Request, res: Response) => {
 const editUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   const user = await fillDataUser(id);
-  console.log(user);
   const roles = await getRolesService();
-  console.log(roles);
-  return res.render("editUser", { id, user, roles });
+  return res.render("editUser", { user, roles });
 };
 const handleUpdateUser = async (req: Request, res: Response) => {
-  const { id, name, email, address } = req.body;
+  const { id, username, fullName, address, phone, roleId, name } = req.body;
+  const avatar = req.file?.filename ?? null;
 
-  await updateUserService(id, { name, email, address });
+  await updateUserService({
+    id,
+    name,
+    username,
+    fullName,
+    address,
+    phone,
+    avatar,
+    roleId,
+  });
   return res.redirect("/");
 };
 
