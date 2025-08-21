@@ -15,6 +15,7 @@ import {
 } from "controllers/admin/dashboard.controller";
 import { fromSlugRomaji, toSlug } from "controllers/admin/d";
 import fileUploadMiddleware from "src/middleware/multer";
+import { getProductPage } from "controllers/client/product.controller";
 const router = express.Router();
 const initWebRoute = (app: Express) => {
   router.get("/", getHomePage);
@@ -33,7 +34,8 @@ const initWebRoute = (app: Express) => {
   router.get("/admin/user", getAdminUserPage);
   router.get("/admin/product", getAdminProductPage);
   router.get("/admin/order", getAdminOrderPage);
-
+  //client
+  router.get("/product/:id", getProductPage);
   app.use("/", router);
 };
 

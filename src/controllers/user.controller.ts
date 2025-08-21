@@ -8,8 +8,7 @@ import {
   updateUserService,
 } from "services/user.service";
 const getHomePage = async (req: Request, res: Response) => {
-  let data = await getHomePageService();
-  return res.render("home", { data });
+  return res.render("client/home/home.ejs");
 };
 const getCreateUser = async (req: Request, res: Response) => {
   const roles = await getRolesService();
@@ -38,7 +37,7 @@ const editUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   const user = await fillDataUser(id);
   const roles = await getRolesService();
-  return res.render("editUser", { user, roles });
+  return res.render("/admin/editUser", { user, roles });
 };
 const handleUpdateUser = async (req: Request, res: Response) => {
   const { id, username, fullName, address, phone, roleId, name } = req.body;
