@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { getAllProductService } from "services/product.service";
 import { getHomePageService } from "services/user.service";
 
 const products = [
@@ -33,6 +34,7 @@ const getAdminUserPage = async (req: Request, res: Response) => {
   return res.render("admin/user/user.ejs", { data });
 };
 const getAdminProductPage = async (req: Request, res: Response) => {
+  const products = await getAllProductService();
   return res.render("admin/product/product.ejs", { products });
 };
 const getAdminOrderPage = async (req: Request, res: Response) => {
