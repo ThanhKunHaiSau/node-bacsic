@@ -8,14 +8,15 @@ import {
   postCreateUser,
 } from "../controllers/user.controller";
 import {
+  getAdminCreateProduct,
   getAdminOrderPage,
   getAdminProductPage,
   getAdminUserPage,
   getDashboardPage,
 } from "controllers/admin/dashboard.controller";
-import { fromSlugRomaji, toSlug } from "controllers/admin/d";
 import fileUploadMiddleware from "src/middleware/multer";
 import { getProductPage } from "controllers/client/product.controller";
+import { handleCreateProduct } from "controllers/admin/product.controller";
 const router = express.Router();
 const initWebRoute = (app: Express) => {
   router.get("/", getHomePage);
@@ -32,8 +33,15 @@ const initWebRoute = (app: Express) => {
   );
   router.get("/admin", getDashboardPage);
   router.get("/admin/user", getAdminUserPage);
-  router.get("/admin/product", getAdminProductPage);
   router.get("/admin/order", getAdminOrderPage);
+  //product
+  router.get("/admin/product", getAdminProductPage);
+  router.get("/admin/products/create-product", getAdminCreateProduct);
+  router.post(
+    "/admin/products/create-product",
+    fileUploadMiddleware("image", "images/products"),
+    handleCreateProduct
+  );
   //client
   router.get("/product/:id", getProductPage);
   app.use("/", router);
