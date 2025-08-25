@@ -3,6 +3,7 @@ import initWebRoute from "./routes/web";
 import { getConnection } from "./config/database";
 import { initDatabBase } from "config/seed";
 import path from "path";
+import { z } from "zod";
 require("dotenv").config();
 const app = express();
 //config req.body

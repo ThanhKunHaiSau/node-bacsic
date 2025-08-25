@@ -33,6 +33,13 @@
     <div id="layoutSidenav_content">
       <main>
         <div class="container-fluid px-4">
+          <% errors.forEach(function(error) { %>
+          <div class="alert alert-danger mb-3">
+            <%= error %>
+          </div>
+
+          <%  } )  %>
+
           <!-- Tiêu đề và breadcrumb -->
           <h1 class="mt-4">Manage Products</h1>
           <ol class="breadcrumb mb-4">
@@ -48,37 +55,37 @@
                   <i class="fas fa-laptop me-2"></i> Create New Product
                 </div>
                 <div class="card-body p-4">
-                  <form action="/admin/products/create-product" method=" POST" enctype="multipart/form-data">
+                  <form action="/admin/products/handle-create-product" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                       <label class="form-label">Tên sản phẩm:</label>
-                      <input type="text" name="name" class="form-control" placeholder="Nhập tên sản phẩm" required>
+                      <input type="text" value="<%= oldData.name %>" name="name" class="form-control" placeholder="Nhập tên sản phẩm" required>
                     </div>
 
                     <div class="row">
                       <div class="mb-3 col-6">
                         <label class="form-label">Giá:</label>
-                        <input type="number" name="price" class="form-control" placeholder="Nhập giá" required>
+                        <input type="number" value="<%= oldData.price %>" name="price" class="form-control" placeholder="Nhập giá">
                       </div>
                       <div class="mb-3 col-6">
                         <label class="form-label">Số lượng:</label>
-                        <input type="number" name="quantity" class="form-control" placeholder="Nhập số lượng" required>
+                        <input type="number" value="<%= oldData.quantity %>" name="quantity" class="form-control" placeholder="Nhập số lượng">
                       </div>
                     </div>
 
                     <div class="mb-3">
                       <label class="form-label">Mô tả ngắn:</label>
-                      <input type="text" name="shortDesc" class="form-control" placeholder="Mô tả ngắn gọn">
+                      <input type="text" value="<%= oldData.shortDesc %>" name="shortDesc" class="form-control" placeholder="Mô tả ngắn gọn">
                     </div>
 
                     <div class="mb-3">
                       <label class="form-label">Mô tả chi tiết:</label>
-                      <textarea name="detailDesc" class="form-control" rows="4" placeholder="Mô tả chi tiết sản phẩm"></textarea>
+                      <textarea value="<%= oldData.detailDesc %>" name="detailDesc" class="form-control" rows="4" placeholder="Mô tả chi tiết sản phẩm"></textarea>
                     </div>
 
                     <div class="row">
                       <div class="mb-3 col-6">
                         <label class="form-label">Nhà sản xuất</label>
-                        <select name="factory" class="form-select">
+                        <select value="<%= oldData.factory %>" name="factory" class="form-select">
                           <option value="APPLE">Apple (MacBook)</option>
                           <option value="ASUS">Asus</option>
                           <option value="LENOVO">Lenovo</option>
@@ -89,7 +96,7 @@
                       </div>
                       <div class="mb-3 col-6">
                         <label class="form-label">Mục đích:</label>
-                        <select name="target" class="form-select">
+                        <select value="<%= oldData.target %>" name="target" class="form-select">
                           <option value="GAMING">Gaming</option>
                           <option value="SINHVIEN-VANPHONG">Sinh viên - Văn phòng
                           </option>
