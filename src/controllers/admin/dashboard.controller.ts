@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAllProductService } from "services/product.service";
+import { getAllProductService } from "services/client/product.service";
 import { getHomePageService } from "services/user.service";
 
 const products = [

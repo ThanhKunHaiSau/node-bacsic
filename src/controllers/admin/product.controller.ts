@@ -5,7 +5,7 @@ import {
   getProdcutById,
   handleCreateProductService,
   updateProductService,
-} from "services/product.service";
+} from "services/client/product.service";
 import {
   ProductSchema,
   TProduct,
