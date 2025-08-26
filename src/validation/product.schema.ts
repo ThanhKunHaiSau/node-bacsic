@@ -19,4 +19,32 @@ export const ProductSchema = z.object({
   factory: z.string().trim().min(1),
   target: z.string().trim().min(1),
 });
+
+export const UpdateProductSchema = z.object({
+  id: z
+    .string()
+    .transform((id) => (id === "" ? 0 : Number(id)))
+    .refine((num) => num !== null, {
+      message: "Id is required!",
+    }),
+  name: z.string().trim().min(1),
+  price: z
+    .string()
+    .transform((val) => (val === "" ? 0 : Number(val)))
+    .refine((num) => num > 0, {
+      message: "Số tiền tối thiểu là 1",
+    }),
+
+  detailDesc: z.string().trim().min(1),
+  shortDesc: z.string().trim().min(1),
+  quantity: z
+    .string()
+    .transform((val) => (val === "" ? 0 : Number(val)))
+    .refine((num) => num > 0, {
+      message: "Số lượng tối thiểu là 1",
+    }),
+  factory: z.string().trim().min(1),
+  target: z.string().trim().min(1),
+});
 export type TProduct = z.infer<typeof ProductSchema>;
+export type TProductUpdate = z.infer<typeof UpdateProductSchema>;

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f7f9fc;
+      font-family: Arial, sans-serif;
+    }
+
+    .form-container {
+      max-width: 650px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .image-preview {
+      display: block;
+      margin: 10px auto;
+      max-height: 220px;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
+    <% errors.forEach(function(error) { %>
+    <div class="alert alert-danger mb-3">
+      <%= error %>
+    </div>
+    <% }) %>
+
+    <h2>Update Product</h2>
+
+    <form action="/admin/update" method="POST" enctype="multipart/form-data">
+      <!-- Hidden ID -->
+      <input type="hidden" name="id" value="<%= product.id %>">
+
+      <!-- Name -->
+      <div class="mb-3">
+        <label for="name" class="form-label">Product Name</label>
+        <input type="text" id="name" name="name" class="form-control" value="<%= product.name || '' %>" required>
+      </div>
+
+      <!-- Price -->
+      <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input type="number" id="price" name="price" class="form-control" value="<%= product.price || 0 %>" required>
+      </div>
+
+      <!-- Short Description -->
+      <div class="mb-3">
+        <label for="shortDesc" class="form-label">Short Description</label>
+        <textarea id="shortDesc" name="shortDesc" class="form-control" rows="2" required><%= product.shortDesc || '' %></textarea>
+      </div>
+
+      <!-- Detail Description -->
+      <div class="mb-3">
+        <label for="detailDesc" class="form-label">Detail Description</label>
+        <textarea id="detailDesc" name="detailDesc" class="form-control" rows="4" required><%= product.detailDesc || '' %></textarea>
+      </div>
+
+      <!-- Target -->
+      <div class="mb-3">
+        <label for="target" class="form-label">Target</label>
+        <select id="target" name="target" class="form-select" required>
+          <% targetOptions.forEach(opt => { %>
+          <option value="<%= opt.value %>" <%= (product.target === opt.value) ? "selected" : "" %>>
+            <%= opt.name %>
+          </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Quantity -->
+      <div class="mb-3">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input type="number" id="quantity" name="quantity" class="form-control" value="<%= product.quantity || 0 %>" required>
+      </div>
+
+      <!-- Factory -->
+      <div class="mb-3">
+        <label for="factory" class="form-label">Factory</label>
+        <select id="factory" name="factory" class="form-select" required>
+          <% factoryOptions.forEach(opt => { %>
+          <option value="<%= opt.value %>" <%= (product.factory === opt.value) ? "selected" : "" %>>
+            <%= opt.name %>
+          </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Image upload -->
+      <div class="mb-3">
+        <label for="imageFile" class="form-label">Product Image</label>
+        <input class="form-control" type="file" id="imageFile" name="image" accept=".png, .jpg, .jpeg">
+      </div>
+
+      <!-- Image Preview -->
+      <% if (product.image) { %>
+      <img src="/images/products/<%= product.image %>" alt="Product Image" class="image-preview" id="imagePreview">
+      <% } else { %>
+      <img src="http://localhost:3000/images/200x200?text=No+Image" alt="No Image" class="image-preview" id="imagePreview">
+      <% } %>
+
+      <button type="submit" class="btn btn-success w-100 mt-3">Update Product</button>
+    </form>
+  </div>
+
+  <script>
+    // Preview image khi chọn file mới
+    const imageFile = document.getElementById("imageFile");
+    const imagePreview = document.getElementById("imagePreview");
+    imageFile?.addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (file) imagePreview.src = URL.createObjectURL(file);
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

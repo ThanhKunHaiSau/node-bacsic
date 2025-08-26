@@ -67,10 +67,10 @@
                       <% } %>
                     </td>
                     <td>
-                      <a href="/admin/products/<%= item._id %>/edit" class="btn btn-warning btn-sm">
+                      <a href="/admin/products/update/<%= item.id %>" class="btn btn-warning btn-sm">
                         <i class="fa-solid fa-pen"></i>
                       </a>
-                      <form action="/admin/products/<%= item._id %>?_method=DELETE" method="POST" class="d-inline">
+                      <form action="/admin/products/delete/<%= item.id %>?_method=DELETE" method="GET" class="d-inline">
                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Xoá sản phẩm này?')">
                           <i class="fa-solid fa-trash"></i>
                         </button>

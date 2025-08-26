@@ -18,6 +18,9 @@ import { getProductPage } from "controllers/client/product.controller";
 import {
   getAdminCreateProduct,
   handleCreateProduct,
+  handleDeleteProduct,
+  handleGetUpdateProduct,
+  handleUpdateProduct,
 } from "controllers/admin/product.controller";
 const router = express.Router();
 const initWebRoute = (app: Express) => {
@@ -43,6 +46,13 @@ const initWebRoute = (app: Express) => {
     "/admin/products/handle-create-product",
     fileUploadMiddleware("image", "images/products"),
     handleCreateProduct
+  );
+  router.get("/admin/products/delete/:id", handleDeleteProduct);
+  router.get("/admin/products/update/:id", handleGetUpdateProduct);
+  router.post(
+    "/admin/update",
+    fileUploadMiddleware("image", "images/products"),
+    handleUpdateProduct
   );
   //client
   router.get("/product/:id", getProductPage);

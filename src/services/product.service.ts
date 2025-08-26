@@ -9,7 +9,6 @@ const handleCreateProductService = async (params: {
   factory: string;
   image: string;
 }) => {
-  console.log("check parms,", params);
   try {
     const {
       name,
@@ -45,4 +44,53 @@ const getAllProductService = async () => {
   }
   return products;
 };
-export { handleCreateProductService, getAllProductService };
+const getProdcutById = async (id: string): Promise<any> => {
+  const product = await prisma.product.findFirst({
+    where: { id: +id },
+  });
+  return product;
+};
+const updateProductService = async (params: {
+  id: number;
+  name?: string;
+  price?: number;
+  detailDesc?: string;
+  shortDesc?: string;
+  target?: string;
+  quantity?: number;
+  factory?: string;
+  image?: string;
+}) => {
+  const {
+    id,
+    name,
+    price,
+    detailDesc,
+    shortDesc,
+    quantity,
+    factory,
+    target,
+    image,
+  } = params;
+  await prisma.product.update({
+    where: {
+      id: +id,
+    },
+    data: {
+      name,
+      price: +price,
+      factory,
+      detailDesc,
+      shortDesc,
+      quantity: +quantity,
+      image,
+      target,
+    },
+  });
+};
+export {
+  handleCreateProductService,
+  getAllProductService,
+  getProdcutById,
+  updateProductService,
+};
