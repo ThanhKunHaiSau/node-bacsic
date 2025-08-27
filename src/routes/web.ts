@@ -22,6 +22,13 @@ import {
   handleGetUpdateProduct,
   handleUpdateProduct,
 } from "controllers/admin/product.controller";
+import { validateAuth } from "src/validation/handleValidate/login.validate";
+import {
+  getLogin,
+  login,
+  postRegister,
+  register,
+} from "controllers/client/auth.controller";
 const router = express.Router();
 const initWebRoute = (app: Express) => {
   router.get("/", getHomePage);
@@ -30,6 +37,12 @@ const initWebRoute = (app: Express) => {
   router.post("/delete-user/:id", deleteUser);
   router.post("/edit-user/:id", editUser);
   router.post("/update-user", fileUploadMiddleware("avatar"), handleUpdateUser);
+  //auth
+  router.get("/login", getLogin);
+  router.get("/register", register);
+  router.post("/register", postRegister);
+  router.post("/login", login);
+
   //admin
   router.post(
     "/admin/create-new-user",

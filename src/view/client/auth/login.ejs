@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #6c63ff;
+      box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: #6c63ff;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #574fd6;
+    }
+
+    .extra-links {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .extra-links a {
+      color: #6c63ff;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    .alert {
+      padding: 0.8rem 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .alert-danger {
+      background: #ffe6e6;
+      color: #b71c1c;
+      border: 1px solid #f5c2c2;
+    }
+
+    .alert svg {
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <% if (errors && errors.length > 0) { %>
+    <% errors.forEach(item => { %>
+    <div class="alert alert-danger">
+      <!-- icon lỗi -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.964 0L.165 13.233c-.457.778.091 1.767.982 1.767h13.706c.89 0 1.438-.99.982-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1-2.001.001 1 1 0 0 1 2.001-.001z" />
+      </svg>
+      <span><%= item %></span>
+    </div>
+    <% }) %>
+    <% } %>
+    <h2>Đăng nhập</h2>
+    <form action="/login" method="POST">
+      <div class="form-group">
+        <label for="username">Tên đăng nhập</label>
+        <input type="text" id="username" value="<%= oldData.username %>" name="username" placeholder="Nhập tên đăng nhập">
+      </div>
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input type="password" id="password" name="password" placeholder="Nhập mật khẩu">
+      </div>
+      <button type="submit" class="btn">Đăng nhập</button>
+    </form>
+
+    <div class="extra-links">
+      <p><a href="/register">Đăng ký tài khoản</a></p>
+      <p><a href="/forgot-password">Quên mật khẩu?</a></p>
+    </div>
+  </div>
+</body>
+
+</html>
