@@ -1,6 +1,9 @@
 import { prisma } from "config/client";
 import { handleHashPassword } from "services/user.service";
 import { ACCOUNT_TYPE } from "config/constant";
+import { createClient } from "redis";
+const redis = createClient();
+redis.connect().catch(console.error);
 
 const initDatabase = async () => {
   const countUser = await prisma.user.count();

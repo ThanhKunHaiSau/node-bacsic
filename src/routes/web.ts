@@ -29,8 +29,11 @@ import {
   postRegister,
   register,
 } from "controllers/client/auth.controller";
+import { createUserRedis } from "controllers/redis/publish";
+import { startUserSubscriber } from "controllers/redis/subscriber";
+
 const router = express.Router();
-const initWebRoute = (app: Express) => {
+const initWebRoute = async (app: Express) => {
   router.get("/", getHomePage);
 
   router.get("/create-user", getCreateUser);
@@ -69,6 +72,8 @@ const initWebRoute = (app: Express) => {
   );
   //client
   router.get("/product/:id", getProductPage);
+  //redis
+  router.post("/redis", createUserRedis);
   app.use("/", router);
 };
 

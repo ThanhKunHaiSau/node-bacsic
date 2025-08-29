@@ -3,6 +3,7 @@ import express from "express";
 import initWebRoute from "./routes/web";
 import { getConnection } from "./config/database";
 import path from "path";
+import { startUserSubscriber } from "controllers/redis/subscriber";
 require("dotenv").config();
 const app = express();
 //config req.body
@@ -22,6 +23,7 @@ initWebRoute(app);
 
 //seeding data
 initDatabBase();
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || 3000, async () => {
   console.log(`App is running on port : ${process.env.PORT || 3001}`);
+  await startUserSubscriber();
 });
