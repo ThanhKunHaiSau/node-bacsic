@@ -25,10 +25,10 @@ import {
 import { validateAuth } from "src/validation/handleValidate/login.validate";
 import {
   getLogin,
-  login,
   postRegister,
   register,
 } from "controllers/client/auth.controller";
+import passport from "passport";
 const router = express.Router();
 const initWebRoute = (app: Express) => {
   router.get("/", getHomePage);
@@ -41,8 +41,13 @@ const initWebRoute = (app: Express) => {
   router.get("/login", getLogin);
   router.get("/register", register);
   router.post("/register", postRegister);
-  router.post("/login", login);
-
+  router.post(
+    "/login",
+    passport.authenticate("local", {
+      successRedirect: "/",
+      failureRedirect: "/login",
+    })
+  );
   //admin
   router.post(
     "/admin/create-new-user",

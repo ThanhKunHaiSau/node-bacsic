@@ -3,24 +3,35 @@ import bcrypt from "bcrypt";
 import { handleHashPassword } from "services/user.service";
 import { ACCOUNT_TYPE } from "config/constant";
 
-const handleLoginService = async (username: string, password: string) => {
+const handleLoginService = async (
+  username: string,
+  password: string,
+  cb: any
+) => {
   try {
     const errors = [];
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
         username,
       },
     });
     if (!user) {
-      errors.push("Not found User");
+      errors.push(`Not found user ${username}`);
+
+      return cb(null, false, {
+        message: `Not found user ${username}`,
+      });
     }
     const compare = await comparePassword(password, user.password);
     if (!compare) {
       errors.push("Wrong password");
+      return cb(null, false, {
+        message: "Wrong password",
+      });
     }
     const { password: _, ...safeUser } = user;
 
-    return { user: safeUser, errors };
+    return cb(null, user);
   } catch (error) {
     console.log(error);
   }

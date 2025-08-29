@@ -10,6 +10,7 @@ import {
   TRegisterSchema,
 } from "src/validation/auth.validate";
 import { validateAuth } from "src/validation/handleValidate/login.validate";
+
 const getLogin = (req: Request, res: Response) => {
   const errors = [];
   const oldData = {
@@ -28,25 +29,25 @@ const register = (req: Request, res: Response) => {
   };
   return res.render("client/auth/register.ejs", { errors, oldData });
 };
-const login = async (req: Request, res: Response) => {
-  console.log(req.body);
-  const errors = await validateAuth(req.body);
-  const { username, password } = req.body as TAuth;
-  const oldData = {
-    username,
-  };
-  if (errors.length > 0) {
-    return res.render("client/auth/login.ejs", { errors, oldData });
-  }
-  const data = await handleLoginService(username, password);
-  if (data.errors) {
-    return res.render("client/auth/login.ejs", {
-      errors: data.errors,
-      oldData,
-    });
-  }
-  return res.redirect("/");
-};
+// const login = async (req: Request, res: Response) => {
+//   console.log(req.body);
+//   const errors = await validateAuth(req.body);
+//   const { username, password } = req.body as TAuth;
+//   const oldData = {
+//     username,
+//   };
+//   if (errors.length > 0) {
+//     return res.render("client/auth/login.ejs", { errors, oldData });
+//   }
+//   const data = await handleLoginService(username, password);
+//   if (data.errors) {
+//     return res.render("client/auth/login.ejs", {
+//       errors: data.errors,
+//       oldData,
+//     });
+//   }
+//   return res.redirect("/");
+// };
 const postRegister = async (req: Request, res: Response) => {
   const errors = [];
   const { fullname, email, password, confirmPassword } = req.body as TRegister;
@@ -69,4 +70,4 @@ const postRegister = async (req: Request, res: Response) => {
   await postRegisterService(params);
   return res.render("client/auth/login.ejs", { errors, oldData });
 };
-export { login, getLogin, register, postRegister };
+export { getLogin, register, postRegister };
