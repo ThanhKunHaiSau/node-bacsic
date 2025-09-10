@@ -74,6 +74,7 @@ const initWebRoute = (app: Express) => {
   );
   //client
   router.get("/product/:id", getProductPage);
+
   app.use("/", router);
 };
 
