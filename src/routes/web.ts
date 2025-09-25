@@ -46,6 +46,7 @@ const initWebRoute = (app: Express) => {
     passport.authenticate("local", {
       successRedirect: "/",
       failureRedirect: "/login",
+      failureMessage: true,
     })
   );
   //admin

@@ -10,6 +10,8 @@ import {
 } from "services/user.service";
 const getHomePage = async (req: Request, res: Response) => {
   const products = await getAllProductService();
+  const user = req.user;
+
   return res.render("client/home/home.ejs", { products });
 };
 const getCreateUser = async (req: Request, res: Response) => {

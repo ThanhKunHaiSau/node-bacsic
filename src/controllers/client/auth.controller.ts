@@ -1,9 +1,6 @@
 import { prisma } from "config/client";
 import { Request, Response } from "express";
-import {
-  handleLoginService,
-  postRegisterService,
-} from "services/client/auth.service";
+import { postRegisterService } from "services/client/auth.service";
 import {
   TAuth,
   TRegister,
@@ -17,6 +14,11 @@ const getLogin = (req: Request, res: Response) => {
     username: "",
     password: "",
   };
+  const { session } = req as any;
+  const message = session?.messages || [];
+  if (message.length > 0) {
+    errors.push(message);
+  }
   return res.render("client/auth/login.ejs", { errors, oldData });
 };
 const register = (req: Request, res: Response) => {
