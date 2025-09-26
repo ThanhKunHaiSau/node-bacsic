@@ -72,4 +72,29 @@ const postRegister = async (req: Request, res: Response) => {
   await postRegisterService(params);
   return res.render("client/auth/login.ejs", { errors, oldData });
 };
-export { getLogin, register, postRegister };
+const getSucucessLogin = (req: Request, res: Response) => {
+  const { user } = req as any;
+  switch (user?.role?.name) {
+    case "ADMIN":
+      res.redirect("/admin");
+      return;
+
+    case "USER":
+      res.redirect("/");
+      return;
+
+    default:
+      res.redirect("/login");
+      return;
+  }
+};
+const getNotHavePermission = (req: Request, res: Response) => {
+  return res.render("/status/403.ejs");
+};
+export {
+  getLogin,
+  register,
+  postRegister,
+  getSucucessLogin,
+  getNotHavePermission,
+};

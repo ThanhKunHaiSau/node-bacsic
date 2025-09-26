@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Không có quyền truy cập</title>
+
+  <style>
+    /* Nhẹ, không phụ thuộc framework */
+    :root {
+      --bg: #0f1724;
+      --card: #0b1220;
+      --accent: #ff6b6b;
+      --muted: #9aa4b2;
+      --glass: rgba(255, 255, 255, 0.03);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(12, 18, 28, 1) 0%, rgba(6, 10, 16, 1) 100%);
+      color: #e6eef6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 920px;
+      background: linear-gradient(180deg, var(--card), rgba(8, 12, 18, 0.9));
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(2, 6, 12, 0.6);
+      overflow: hidden;
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .left {
+      flex: 1.2;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+      min-height: 220px;
+    }
+
+    .code {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--accent);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    p.lead {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5
+    }
+
+    .actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      background: var(--glass);
+      color: inherit;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .btn.primary {
+      background: linear-gradient(90deg, var(--accent), #ff8b8b);
+      color: #091018;
+      border: none;
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.12);
+    }
+
+    .right {
+      flex: 0.9;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 107, 107, 0.08), transparent 10%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 40%);
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 260px;
+    }
+
+    .txt-muted {
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    @media (max-width:760px) {
+      .card {
+        flex-direction: column;
+        padding: 0
+      }
+
+      .right {
+        order: -1;
+        min-height: 120px
+      }
+
+      .left {
+        padding: 20px
+      }
+
+      .code {
+        font-size: 40px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card" role="main" aria-labelledby="title">
+    <section class="left" aria-hidden="false">
+      <div class="code">403</div>
+      <h1 id="title">Không có quyền truy cập</h1>
+      <p class="lead">Bạn không có quyền xem trang này. Nếu bạn nghĩ đây là nhầm lẫn, liên hệ quản trị viên.</p>
+
+      <div class="actions" role="group" aria-label="Actions">
+        <a href="/" class="btn primary">Về trang chủ</a>
+        <a href="javascript:history.back()" class="btn">Quay lại</a>
+      </div>
+    </section>
+
+    <aside class="right" aria-hidden="true">
+      <div>
+        <p style="margin:0;font-weight:700;font-size:15px">Truy cập bị từ chối</p>
+        <p class="txt-muted" style="margin-top:6px;max-width:220px">
+          Quyền truy cập bị hạn chế theo chính sách bảo mật hoặc vì bạn chưa đăng nhập/không có đủ role.
+        </p>
+      </div>
+    </aside>
+  </main>
+</body>
+
+</html>

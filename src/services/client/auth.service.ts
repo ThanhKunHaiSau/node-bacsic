@@ -40,4 +40,14 @@ const postRegisterService = async (params: {
     });
   }
 };
-export { checkUserExist, postRegisterService };
+const getRoleUserById = async (id: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: { role: true },
+    omit: { password: true },
+  });
+  return user;
+};
+export { checkUserExist, postRegisterService, getRoleUserById };

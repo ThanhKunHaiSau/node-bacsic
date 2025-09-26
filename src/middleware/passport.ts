@@ -5,6 +5,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import session from "express-session";
 import { get } from "http";
 import { getUserById } from "services/user.service";
+import { getRoleUserById } from "services/client/auth.service";
 const configPassport = () => {
   passport.use(
     new LocalStrategy({ passReqToCallback: true }, async function verify(
@@ -29,7 +30,7 @@ const configPassport = () => {
           message: "Wrong password",
         });
       }
-      return cb(null, user);
+      return cb(null, user as any);
     })
   );
   // tra session ve user de luu vao session(tra ve client)
@@ -39,7 +40,8 @@ const configPassport = () => {
 
   passport.deserializeUser(async function (user: any, callback) {
     const { id, username } = user;
-    const userDb = await getUserById(id);
+
+    const userDb = await getRoleUserById(id);
     return callback(null, userDb);
   });
 };

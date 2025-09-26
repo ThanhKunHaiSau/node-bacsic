@@ -1,3 +1,4 @@
+/// <reference path="./interface/user.d.ts" />
 import initDatabBase from "config/seed";
 import express from "express";
 import initWebRoute from "./routes/web";

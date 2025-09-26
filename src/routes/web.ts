@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import {
   deleteUser,
   editUser,
@@ -22,13 +22,16 @@ import {
   handleGetUpdateProduct,
   handleUpdateProduct,
 } from "controllers/admin/product.controller";
-import { validateAuth } from "src/validation/handleValidate/login.validate";
 import {
   getLogin,
+  getNotHavePermission,
+  getSucucessLogin,
   postRegister,
   register,
 } from "controllers/client/auth.controller";
 import passport from "passport";
+import { isLogin, verifyRoleAdmin } from "src/middleware/auth";
+import { handleAddToCart } from "controllers/client/cart.controller";
 const router = express.Router();
 const initWebRoute = (app: Express) => {
   router.get("/", getHomePage);
@@ -38,13 +41,24 @@ const initWebRoute = (app: Express) => {
   router.post("/edit-user/:id", editUser);
   router.post("/update-user", fileUploadMiddleware("avatar"), handleUpdateUser);
   //auth
+  router.get("/get-not-have-permission", getNotHavePermission);
+
+  router.get("/get-login-success", getSucucessLogin);
   router.get("/login", getLogin);
+  app.post("/logout", function (req, res, next) {
+    req.logout(function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect("/");
+    });
+  });
   router.get("/register", register);
   router.post("/register", postRegister);
   router.post(
     "/login",
     passport.authenticate("local", {
-      successRedirect: "/",
+      successRedirect: "/get-login-success",
       failureRedirect: "/login",
       failureMessage: true,
     })
@@ -75,7 +89,8 @@ const initWebRoute = (app: Express) => {
   );
   //client
   router.get("/product/:id", getProductPage);
-  app.use("/", router);
+  router.post("/add-product-to-cart/:productId", isLogin, handleAddToCart);
+  app.use("/", verifyRoleAdmin, router);
 };
 
 export default initWebRoute;
