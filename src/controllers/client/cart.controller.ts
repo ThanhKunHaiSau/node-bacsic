@@ -57,4 +57,95 @@ const handleAddToCart = async (req: Request, res: Response) => {
     res.redirect("/");
   }
 };
-export { handleAddToCart };
+const getCartPage = async (req: Request, res: Response) => {
+  const user = req.user as Express.User;
+
+  const { products, totalCart } = await fetchAllProductsCarts(user);
+  return res.render("client/product/cart.ejs", { products, totalCart });
+};
+const fetchAllProductsCarts = async (
+  user: Express.User
+): Promise<{ products: any[]; totalCart: number }> => {
+  let products: any[] = [];
+  let totalCart = 0;
+  const cartUser = await prisma.cart.findUnique({
+    where: { userId: user.id },
+  });
+  if (cartUser) {
+    const productsCart = await prisma.cartDetail.findMany({
+      where: { cartId: cartUser.id },
+      include: {
+        product: {
+          select: { id: true, name: true, price: true, image: true },
+        },
+      },
+    });
+
+    products = productsCart.map((item) => ({
+      ...item,
+      total: item.quantity * item.product.price,
+    }));
+    totalCart = products.reduce(
+      (acc, item) => acc + item.quantity * item.product.price,
+      0
+    );
+  }
+
+  return { products, totalCart };
+};
+const handleDeleteProductCart = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const findCart = await prisma.cartDetail.findUnique({
+    where: {
+      id: +id,
+    },
+  });
+  if (findCart) {
+    await prisma.cartDetail.delete({
+      where: {
+        id: +id,
+      },
+    });
+    const data = await prisma.cart.update({
+      where: {
+        id: findCart.cartId,
+      },
+      data: {
+        sum: {
+          decrement: findCart.quantity,
+        },
+      },
+    });
+  }
+
+  return res.redirect("/cart");
+};
+const updateProductCart = async (req: Request, res: Response) => {
+  const { cartDetailId, quantity } = req.body;
+  const user = req.user;
+  const cartExist = await prisma.cartDetail.findUnique({
+    where: {
+      id: +cartDetailId,
+    },
+  });
+  if (cartExist) {
+    await prisma.cartDetail.update({
+      where: {
+        id: +cartDetailId,
+      },
+      data: {
+        quantity,
+      },
+    });
+    await fetchAllProductsCarts(user);
+  } else {
+    throw new Error("error form servcer!");
+  }
+  return res.redirect("/cart");
+};
+export {
+  handleAddToCart,
+  getCartPage,
+  handleDeleteProductCart,
+  updateProductCart,
+};

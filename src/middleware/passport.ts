@@ -5,7 +5,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import session from "express-session";
 import { get } from "http";
 import { getUserById } from "services/user.service";
-import { getRoleUserById } from "services/client/auth.service";
+import { getRoleUserById, getSumCart } from "services/client/auth.service";
 const configPassport = () => {
   passport.use(
     new LocalStrategy({ passReqToCallback: true }, async function verify(
@@ -42,11 +42,9 @@ const configPassport = () => {
     const { id, username } = user;
 
     const userDb = await getRoleUserById(id);
-    return callback(null, userDb);
+    const sumCart = await getSumCart(id);
+    console.log("userDb", sumCart);
+    return callback(null, { ...userDb, sumCart });
   });
-};
-const comparePassword = async (password: string, existPassword: string) => {
-  const compare = bcrypt.compareSync(password, existPassword);
-  return compare;
 };
 export default configPassport;

@@ -31,7 +31,12 @@ import {
 } from "controllers/client/auth.controller";
 import passport from "passport";
 import { isLogin, verifyRoleAdmin } from "src/middleware/auth";
-import { handleAddToCart } from "controllers/client/cart.controller";
+import {
+  getCartPage,
+  handleAddToCart,
+  handleDeleteProductCart,
+  updateProductCart,
+} from "controllers/client/cart.controller";
 const router = express.Router();
 const initWebRoute = (app: Express) => {
   router.get("/", getHomePage);
@@ -90,6 +95,9 @@ const initWebRoute = (app: Express) => {
   //client
   router.get("/product/:id", getProductPage);
   router.post("/add-product-to-cart/:productId", isLogin, handleAddToCart);
+  router.get("/cart", isLogin, getCartPage);
+  router.post("/delete-product-cart/:id", handleDeleteProductCart);
+  router.post("/cart/update", updateProductCart);
   app.use("/", verifyRoleAdmin, router);
 };
 

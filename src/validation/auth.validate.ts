@@ -42,17 +42,17 @@ const emailSchema = z
 const passwordSchema = z
   .string()
   .min(3, { message: "Min character password is 3" })
-  .max(20, { message: "Max character password is 20" })
-  // .refine((password) => /[A-Z]/.test(password), {
-  //   message: uppercaseErrorMessage,
-  // })
-  // .refine((password) => /[a-z]/.test(password), {
-  //   message: lowercaseErrorMessage,
-  // })
-  // .refine((password) => /[0-9]/.test(password), { message: numberErrorMessage })
-  .refine((password) => /[!@#$%^&*]/.test(password), {
-    message: "specialCharacterErrorMessage",
-  });
+  .max(20, { message: "Max character password is 20" });
+// .refine((password) => /[A-Z]/.test(password), {
+//   message: uppercaseErrorMessage,
+// })
+// .refine((password) => /[a-z]/.test(password), {
+//   message: lowercaseErrorMessage,
+// })
+// .refine((password) => /[0-9]/.test(password), { message: numberErrorMessage })
+// .refine((password) => /[!@#$%^&*]/.test(password), {
+//   message: "specialCharacterErrorMessage",
+// });
 export const TRegisterSchema = z
   .object({
     email: emailSchema,
