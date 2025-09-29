@@ -43,7 +43,6 @@ const configPassport = () => {
 
     const userDb = await getRoleUserById(id);
     const sumCart = await getSumCart(id);
-    console.log("userDb", sumCart);
     return callback(null, { ...userDb, sumCart });
   });
 };

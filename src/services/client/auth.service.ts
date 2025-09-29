@@ -53,17 +53,21 @@ const getRoleUserById = async (id: string) => {
 const getSumCart = async (id: string) => {
   const cart = await prisma.cart.findUnique({
     where: {
-      userId: Number(id),
+      userId: +id,
     },
   });
-  const totalProdcutC = await prisma.cartDetail.findMany({
-    where: {
-      cartId: cart.id,
-    },
-  });
-  const total = totalProdcutC.reduce((acc, item) => {
-    return acc + item.quantity;
-  }, 0);
-  return total || 0;
+  if (!cart) return 0;
+  else {
+    const totalProdcutC = await prisma.cartDetail.findMany({
+      where: {
+        cartId: cart.id,
+      },
+    });
+
+    const total = totalProdcutC.reduce((acc, item) => {
+      return acc + item.quantity;
+    }, 0);
+    return total || 0;
+  }
 };
 export { checkUserExist, postRegisterService, getRoleUserById, getSumCart };

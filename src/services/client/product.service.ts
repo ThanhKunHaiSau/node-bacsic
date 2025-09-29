@@ -88,9 +88,63 @@ const updateProductService = async (params: {
     },
   });
 };
+const handlePlaceOrder = async (params: {
+  receiverName: string;
+  receiverAddress: string;
+  receiverPhone: string;
+  userId: number;
+  totalPrice: number;
+}) => {
+  const { receiverName, receiverAddress, receiverPhone, userId, totalPrice } =
+    params;
+  console.log("check params", params);
+  const cart = await prisma.cart.findUnique({
+    where: { userId },
+    include: {
+      cartDetails: true,
+    },
+  });
+  if (cart) {
+    const dataOderDetail =
+      cart?.cartDetails?.map((item) => {
+        return {
+          price: item.price,
+          quantity: item.quantity,
+          productId: item.productId,
+        };
+      }) || [];
+    console.log("dadada", dataOderDetail);
+    await prisma.order.create({
+      data: {
+        receiverName,
+        receiverAddress,
+        receiverPhone,
+        paymentMethod: "COD",
+        paymentStatus: "PAYMENT_UNPAID",
+        status: "PENDING",
+        totalPrice: +totalPrice,
+        userId,
+        orderDetails: {
+          create: dataOderDetail,
+        },
+      },
+    });
+    await prisma.cartDetail.deleteMany({
+      where: { cartId: cart.id },
+    });
+    await prisma.cart.delete({
+      where: {
+        id: cart.id,
+      },
+    });
+  } else {
+    throw new Error("Cart not found");
+  }
+};
 export {
   handleCreateProductService,
   getAllProductService,
   getProdcutById,
   updateProductService,
+  handlePlaceOrder,
 };

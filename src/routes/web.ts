@@ -12,6 +12,7 @@ import {
   getAdminProductPage,
   getAdminUserPage,
   getDashboardPage,
+  getProductByCartId,
 } from "controllers/admin/dashboard.controller";
 import fileUploadMiddleware from "src/middleware/multer";
 import { getProductPage } from "controllers/client/product.controller";
@@ -33,8 +34,11 @@ import passport from "passport";
 import { isLogin, verifyRoleAdmin } from "src/middleware/auth";
 import {
   getCartPage,
+  getCheckoutPage,
+  getThanksPage,
   handleAddToCart,
   handleDeleteProductCart,
+  postPlaceOder,
   updateProductCart,
 } from "controllers/client/cart.controller";
 const router = express.Router();
@@ -77,6 +81,8 @@ const initWebRoute = (app: Express) => {
   router.get("/admin", getDashboardPage);
   router.get("/admin/user", getAdminUserPage);
   router.get("/admin/order", getAdminOrderPage);
+  router.get("/admin/orders/:id", getProductByCartId);
+
   //product
   router.get("/admin/product", getAdminProductPage);
   router.get("/admin/products/create-product", getAdminCreateProduct);
@@ -98,6 +104,9 @@ const initWebRoute = (app: Express) => {
   router.get("/cart", isLogin, getCartPage);
   router.post("/delete-product-cart/:id", handleDeleteProductCart);
   router.post("/cart/update", updateProductCart);
+  router.get("/checkout", getCheckoutPage);
+  router.post("/place-order", postPlaceOder);
+  router.get("/thanks", getThanksPage);
   app.use("/", verifyRoleAdmin, router);
 };
 

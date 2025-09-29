@@ -2,39 +2,97 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
-    <meta name="author" content="Hỏi Dân IT" />
-    <title>Manage Order</title>
-    <link href="/admin/css/styles.css" rel="stylesheet" />
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
+  <meta name="author" content="Hỏi Dân IT" />
+  <title>Manage Order</title>
+  <link href="/admin/css/styles.css" rel="stylesheet" />
+  <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="sb-nav-fixed">
-    <%- include('../layout/header.ejs') %>
-    <div id="layoutSidenav">
-        <%- include('../layout/sidenav.ejs') %>
-        <div id="layoutSidenav_content">
-           <main>
-            <div class="container-fluid px-4">
-    <h1 class="mt-4">Manage Order</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-        <li class="breadcrumb-item active">Order</li>
-    </ol>
-    <div>table order</div>
-</div>
+  <%- include('../layout/header.ejs') %>
+  <div id="layoutSidenav">
+    <%- include('../layout/sidenav.ejs') %>
+    <div id="layoutSidenav_content">
+      <main>
+        <div class="container-fluid px-4">
+          <h1 class="mt-4">Manage Order</h1>
+          <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+            <li class="breadcrumb-item active">Order</li>
+          </ol>
 
-           </main>
-               <%- include('../layout/footer.ejs') %>
+          <!-- Bảng danh sách đơn hàng -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-table me-1"></i>
+              Danh sách đơn hàng
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Payment Method</th>
+                    <th>Payment Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (orders && orders.length > 0) { %>
+                  <% orders.forEach((order, index) => { %>
+                  <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= order.user?.fullName || '—' %></td>
+                    <td><%= order.totalPrice.toLocaleString('vi-VN') %> ₫</td>
+                    <td>
+                      <% if (order.status === 'pending') { %>
+                      <span class="badge bg-warning text-dark">Pending</span>
+                      <% } else if (order.status === 'shipped') { %>
+                      <span class="badge bg-info">Shipped</span>
+                      <% } else if (order.status === 'completed') { %>
+                      <span class="badge bg-success">Completed</span>
+                      <% } else { %>
+                      <span class="badge bg-secondary"><%= order.status %></span>
+                      <% } %>
+                    </td>
+                    <td><%= order.paymentMethod || '—' %></td>
+                    <td>
+                      <% if (order.paymentStatus === 'paid') { %>
+                      <span class="badge bg-success">Paid</span>
+                      <% } else { %>
+                      <span class="badge bg-danger"><%= order.paymentStatus %></span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <a href="/admin/orders/<%= order.id %>" class="btn btn-sm btn-primary">View</a>
+                      <a href="/admin/orders/<%= order.id %>/edit" class="btn btn-sm btn-warning">Edit</a>
+                      <a href="/admin/orders/<%= order.id %>/delete" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa đơn này?')">Delete</a>
+                    </td>
+                  </tr>
+                  <% }) %>
+                  <% } else { %>
+                  <tr>
+                    <td colspan="7" class="text-center text-muted">Chưa có đơn hàng nào</td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+      </main>
+      <%- include('../layout/footer.ejs') %>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-    <script src="/admin/js/scripts.js"></script>
-    
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="/admin/js/scripts.js"></script>
 </body>
 
 </html>

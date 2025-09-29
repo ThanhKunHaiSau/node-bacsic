@@ -1,3 +1,4 @@
+import { prisma } from "config/client";
 import { Request, Response } from "express";
 import { getAllProductService } from "services/client/product.service";
 import { getHomePageService } from "services/user.service";
@@ -38,12 +39,40 @@ const getAdminProductPage = async (req: Request, res: Response) => {
   return res.render("admin/product/product.ejs", { products });
 };
 const getAdminOrderPage = async (req: Request, res: Response) => {
-  return res.render("admin/order/order.ejs");
-};
+  const orders = await prisma.order.findMany({
+    include: {
+      user: true,
+    },
+  });
 
+  return res.render("admin/order/order.ejs", { orders });
+};
+const getProductByCartId = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const price = await prisma.order.findUnique({
+    where: {
+      id: +id,
+    },
+    select: {
+      totalPrice: true,
+    },
+  });
+  const order = await prisma.orderDetail.findMany({
+    where: { orderId: +id },
+    include: {
+      product: true,
+    },
+  });
+
+  return res.render("admin/order/order-detail.ejs", {
+    order,
+    totalPrice: price.totalPrice,
+  });
+};
 export {
   getDashboardPage,
   getAdminUserPage,
   getAdminProductPage,
   getAdminOrderPage,
+  getProductByCartId,
 };
