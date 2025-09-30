@@ -87,17 +87,17 @@
 
           <!-- Chọn số lượng -->
           <div class="d-flex align-items-center mb-4">
-            <button class="btn btn-sm btn-light border rounded-circle me-2">
+            <button class="btn btn-sm btn-light border rounded-circle me-2 btn-minus">
               <i class="fa fa-minus"></i>
             </button>
-            <input type="text" class="form-control form-control-sm text-center border-secondary" style="width:60px;" value="1">
-            <button class="btn btn-sm btn-light border rounded-circle ms-2">
+            <input type="text" class="form-control form-control-sm text-center border-secondary quantity-input" style="width:60px;" value="1">
+            <button class="btn btn-sm btn-light border rounded-circle ms-2 btn-plus">
               <i class="fa fa-plus"></i>
             </button>
           </div>
 
           <!-- Nút add to cart -->
-          <a href="#" class="btn btn-primary rounded-pill px-4 py-2">
+          <a href="#" class="btn btn-primary rounded-pill px-4 py-2 btn-add-cart" data-product-id="<%= product.id %>">
             <i class="fa fa-shopping-bag me-2"></i> Add to Cart
           </a>
         </div>
@@ -149,7 +149,50 @@
     <script src="../client/lib/waypoints/waypoints.min.js"></script>
     <script src="../client/lib/lightbox/js/lightbox.min.js"></script>
     <script src="../client/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const minusBtn = document.querySelector(".btn-minus");
+        const plusBtn = document.querySelector(".btn-plus");
+        const qtyInput = document.querySelector(".quantity-input");
+        const addCartBtn = document.querySelector(".btn-add-cart");
 
+        // Giảm số lượng
+        minusBtn.addEventListener("click", function() {
+          let value = parseInt(qtyInput.value) || 1;
+          if (value > 1) qtyInput.value = value - 1;
+        });
+
+        // Tăng số lượng
+        plusBtn.addEventListener("click", function() {
+          let value = parseInt(qtyInput.value) || 1;
+          qtyInput.value = value + 1;
+        });
+
+        // Bấm nút Add to Cart
+        addCartBtn.addEventListener("click", function(e) {
+          e.preventDefault(); // chặn reload
+
+          const productId = this.getAttribute("data-product-id");
+          const quantity = parseInt(qtyInput.value) || 1;
+
+          fetch(`/add-product-to-cart/${productId}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                productId,
+                quantity
+              })
+            })
+            .then(() => window.location.reload())
+            .catch((err) => {
+              console.error(err);
+              alert("Có lỗi khi thêm giỏ hàng!");
+            });
+        });
+      });
+    </script>
     <script src="../client/js/main.js"></script>
 </body>
 

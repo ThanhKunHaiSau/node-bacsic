@@ -2,6 +2,7 @@ import { prisma } from "config/client";
 import { Request, Response } from "express";
 import { getAllProductService } from "services/client/product.service";
 import { getHomePageService } from "services/user.service";
+import { promise } from "zod";
 
 const products = [
   {
@@ -28,7 +29,24 @@ const products = [
   },
 ];
 const getDashboardPage = async (req: Request, res: Response) => {
-  return res.render("admin/dashboard/index.ejs");
+  const [users, orders, products] = await Promise.all([
+    prisma.user.findMany(),
+    prisma.order.findMany(),
+    prisma.product.findMany(),
+  ]);
+
+  const totalUsers = users.length;
+  const totalOrders = orders.length;
+  const totalProducts = products.length;
+  const recentOrders = await prisma.order.findMany({
+    include: {
+      user: true,
+    },
+  });
+  return res.render("admin/dashboard/index.ejs", {
+    stats: { totalUsers, totalOrders, totalProducts },
+    recentOrders,
+  });
 };
 const getAdminUserPage = async (req: Request, res: Response) => {
   let data = await getHomePageService();
@@ -69,6 +87,7 @@ const getProductByCartId = async (req: Request, res: Response) => {
     totalPrice: price.totalPrice,
   });
 };
+
 export {
   getDashboardPage,
   getAdminUserPage,

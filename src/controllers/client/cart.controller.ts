@@ -2,9 +2,11 @@ import { User } from "@prisma/client";
 import { prisma } from "config/client";
 import { Request, Response } from "express";
 import { handlePlaceOrder } from "services/client/product.service";
+const fs = require("node:fs");
 
 const handleAddToCart = async (req: Request, res: Response) => {
   const { productId } = req.params;
+  console.log("dadadad", productId);
   const user = req.user as Express.User;
   const { quantity } = req.body;
 
@@ -14,6 +16,7 @@ const handleAddToCart = async (req: Request, res: Response) => {
   const product = await prisma.product.findUnique({
     where: { id: Number(productId) },
   });
+  
   if (checkCartExist) {
     await prisma.cart.update({
       where: { userId: user.id },
@@ -168,6 +171,27 @@ const postPlaceOder = async (req: Request, res: Response) => {
 const getThanksPage = async (req: Request, res: Response) => {
   return res.render("client/product/thanks.ejs");
 };
+const getPageHistory = async (req: Request, res: Response) => {
+  const user = req.user as Express.User;
+  const orders = await prisma.order.findMany({
+    where: {
+      userId: user.id,
+    },
+    include: {
+      orderDetails: {
+        select: {
+          product: true,
+        },
+      },
+    },
+  });
+  fs.writeFile("aelx.json", JSON.stringify(orders), (err) => {
+    if (err) throw err;
+    console.log("Saved!");
+  });
+  console.log("check orders");
+  return res.render("client/product/history.ejs", { orders });
+};
 export {
   handleAddToCart,
   getCartPage,
@@ -176,4 +200,5 @@ export {
   getCheckoutPage,
   postPlaceOder,
   getThanksPage,
+  getPageHistory,
 };

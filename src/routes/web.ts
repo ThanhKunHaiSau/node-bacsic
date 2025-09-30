@@ -35,6 +35,7 @@ import { isLogin, verifyRoleAdmin } from "src/middleware/auth";
 import {
   getCartPage,
   getCheckoutPage,
+  getPageHistory,
   getThanksPage,
   handleAddToCart,
   handleDeleteProductCart,
@@ -82,6 +83,7 @@ const initWebRoute = (app: Express) => {
   router.get("/admin/user", getAdminUserPage);
   router.get("/admin/order", getAdminOrderPage);
   router.get("/admin/orders/:id", getProductByCartId);
+  
 
   //product
   router.get("/admin/product", getAdminProductPage);
@@ -107,6 +109,8 @@ const initWebRoute = (app: Express) => {
   router.get("/checkout", getCheckoutPage);
   router.post("/place-order", postPlaceOder);
   router.get("/thanks", getThanksPage);
+  router.get("/histories", getPageHistory);
+
   app.use("/", verifyRoleAdmin, router);
 };
 
