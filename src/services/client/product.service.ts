@@ -37,8 +37,14 @@ const handleCreateProductService = async (params: {
     console.log(error);
   }
 };
-const getAllProductService = async () => {
-  const products = await prisma.product.findMany();
+const getAllProductService = async (params: {
+  limit: number;
+  skip: number;
+}) => {
+  const products = await prisma.product.findMany({
+    take: params.limit || 10,
+    skip: params.skip,
+  });
   if (!products) {
     return [];
   }
@@ -97,48 +103,80 @@ const handlePlaceOrder = async (params: {
 }) => {
   const { receiverName, receiverAddress, receiverPhone, userId, totalPrice } =
     params;
-  console.log("check params", params);
-  const cart = await prisma.cart.findUnique({
-    where: { userId },
-    include: {
-      cartDetails: true,
-    },
-  });
-  if (cart) {
-    const dataOderDetail =
-      cart?.cartDetails?.map((item) => {
-        return {
-          price: item.price,
-          quantity: item.quantity,
-          productId: item.productId,
-        };
-      }) || [];
-    console.log("dadada", dataOderDetail);
-    await prisma.order.create({
-      data: {
-        receiverName,
-        receiverAddress,
-        receiverPhone,
-        paymentMethod: "COD",
-        paymentStatus: "PAYMENT_UNPAID",
-        status: "PENDING",
-        totalPrice: +totalPrice,
-        userId,
-        orderDetails: {
-          create: dataOderDetail,
+  try {
+    await prisma.$transaction(async (tx) => {
+      const cart = await tx.cart.findUnique({
+        where: { userId },
+        include: {
+          cartDetails: true,
         },
-      },
+      });
+      if (cart) {
+        const dataOderDetail =
+          cart?.cartDetails?.map((item) => {
+            return {
+              price: item.price,
+              quantity: item.quantity,
+              productId: item.productId,
+            };
+          }) || [];
+        await tx.order.create({
+          data: {
+            receiverName,
+            receiverAddress,
+            receiverPhone,
+            paymentMethod: "COD",
+            paymentStatus: "PAYMENT_UNPAID",
+            status: "PENDING",
+            totalPrice: +totalPrice,
+            userId,
+            orderDetails: {
+              create: dataOderDetail,
+            },
+          },
+        });
+        await tx.cartDetail.deleteMany({
+          where: { cartId: cart.id },
+        });
+        await tx.cart.delete({
+          where: {
+            id: cart.id,
+          },
+        });
+        for (let i = 0; i < dataOderDetail.length; i++) {
+          const productId = dataOderDetail[i].productId;
+          const product = await tx.product.findUnique({
+            where: {
+              id: productId,
+            },
+          });
+          if (!product || product.quantity < dataOderDetail[i].quantity) {
+            throw new Error(
+              `Product ${product.name} not found or not enough quantity! `
+            );
+          }
+          await tx.product.update({
+            where: {
+              id: productId,
+            },
+            data: {
+              quantity: {
+                decrement: dataOderDetail[i].quantity,
+              },
+              sold: {
+                increment: dataOderDetail[i].quantity,
+              },
+            },
+          });
+        }
+      } else {
+        throw new Error("Cart not found");
+      }
     });
-    await prisma.cartDetail.deleteMany({
-      where: { cartId: cart.id },
-    });
-    await prisma.cart.delete({
-      where: {
-        id: cart.id,
-      },
-    });
-  } else {
-    throw new Error("Cart not found");
+    return "";
+  } catch (error) {
+    console.log("checkđa", error);
+    return error;
   }
 };
 export {

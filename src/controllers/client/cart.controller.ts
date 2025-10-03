@@ -6,7 +6,6 @@ const fs = require("node:fs");
 
 const handleAddToCart = async (req: Request, res: Response) => {
   const { productId } = req.params;
-  console.log("dadadad", productId);
   const user = req.user as Express.User;
   const { quantity } = req.body;
 
@@ -16,7 +15,7 @@ const handleAddToCart = async (req: Request, res: Response) => {
   const product = await prisma.product.findUnique({
     where: { id: Number(productId) },
   });
-  
+
   if (checkCartExist) {
     await prisma.cart.update({
       where: { userId: user.id },
@@ -128,25 +127,41 @@ const handleDeleteProductCart = async (req: Request, res: Response) => {
 const updateProductCart = async (req: Request, res: Response) => {
   const { cartDetailId, quantity } = req.body;
   const user = req.user;
-  const cartExist = await prisma.cartDetail.findUnique({
-    where: {
-      id: +cartDetailId,
-    },
-  });
-  if (cartExist) {
-    await prisma.cartDetail.update({
-      where: {
-        id: +cartDetailId,
-      },
-      data: {
-        quantity,
-      },
+  try {
+    await prisma.$transaction(async (tx) => {
+      const cartExist = await tx.cartDetail.findUnique({
+        where: {
+          id: +cartDetailId,
+        },
+      });
+      if (cartExist) {
+        await tx.cartDetail.update({
+          where: {
+            id: +cartDetailId,
+          },
+          data: {
+            quantity,
+          },
+        });
+        await fetchAllProductsCarts(user);
+      } else {
+        throw new Error("error form servcer!");
+      }
+      if (cartExist.quantity < quantity) {
+        const product = await prisma.product.findUnique({
+          where: {
+            id: cartExist.productId,
+          },
+        });
+        throw new Error(`${product.name}  not enough quantiy`);
+      }
     });
-    await fetchAllProductsCarts(user);
-  } else {
-    throw new Error("error form servcer!");
+
+    return res.redirect("/cart");
+  } catch (error) {
+    console.log(error);
+    return res.redirect("/cart");
   }
-  return res.redirect("/cart");
 };
 const getCheckoutPage = async (req: Request, res: Response) => {
   const user = req.user as Express.User;
@@ -164,8 +179,12 @@ const postPlaceOder = async (req: Request, res: Response) => {
     userId: user.id,
     totalPrice,
   };
-  await handlePlaceOrder(params);
 
+  const message = await handlePlaceOrder(params);
+  console.log("check quantidaf", message);
+  if (message) {
+    return res.redirect("/checkout");
+  }
   return res.redirect("/thanks");
 };
 const getThanksPage = async (req: Request, res: Response) => {
@@ -189,7 +208,6 @@ const getPageHistory = async (req: Request, res: Response) => {
     if (err) throw err;
     console.log("Saved!");
   });
-  console.log("check orders");
   return res.render("client/product/history.ejs", { orders });
 };
 export {

@@ -1,3 +1,4 @@
+import { prisma } from "config/client";
 import { Request, Response } from "express";
 import { getAllProductService } from "services/client/product.service";
 import {
@@ -9,10 +10,21 @@ import {
   updateUserService,
 } from "services/user.service";
 const getHomePage = async (req: Request, res: Response) => {
-  const products = await getAllProductService();
-  const user = req.user;
-
-  return res.render("client/home/home.ejs", { products });
+  const currentPage = req.query.page ? Number(req.query.page) : 1;
+  const perPage = req.query.limit ? Number(req.query.limit) : 8;
+  const skip = (currentPage - 1) * perPage;
+  const products = await getAllProductService({ limit: perPage, skip });
+  const totalProducts = (await prisma.product.findMany()).length;
+  const totalPages = Math.ceil(totalProducts / perPage);
+  return res.render("client/home/home.ejs", {
+    products,
+    pagination: {
+      page: currentPage,
+      limit: perPage,
+      total: totalProducts,
+      totalPages,
+    },
+  });
 };
 const getCreateUser = async (req: Request, res: Response) => {
   const roles = await getRolesService();

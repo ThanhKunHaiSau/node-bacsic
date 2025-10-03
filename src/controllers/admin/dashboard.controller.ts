@@ -49,12 +49,43 @@ const getDashboardPage = async (req: Request, res: Response) => {
   });
 };
 const getAdminUserPage = async (req: Request, res: Response) => {
-  let data = await getHomePageService();
-  return res.render("admin/user/user.ejs", { data });
+  const perPage = req.query.limit ? Number(req.query.limit) : 1;
+  const currentPage = req.query.page ? Number(req.query.page) : 1;
+  const skip = (currentPage - 1) * perPage;
+  const totalUser = (await prisma.user.findMany()).length;
+  const totalPage = Math.ceil(totalUser / perPage);
+  let data = await getHomePageService({ limit: perPage, skip });
+  return res.render("admin/user/user.ejs", {
+    data,
+    pagination: {
+      page: currentPage,
+      limit: perPage,
+      total: totalUser,
+      totalPage,
+    },
+  });
 };
 const getAdminProductPage = async (req: Request, res: Response) => {
-  const products = await getAllProductService();
-  return res.render("admin/product/product.ejs", { products });
+  const page = req.query.page ? Number(req.query.page) : 1;
+  const limit = req.query.limit ? Number(req.query.limit) : 10;
+  const currentPage = Number(page);
+  const perPage = Number(limit);
+  const skip = (currentPage - 1) * perPage || 0;
+  const params = { limit: Number(limit), skip };
+  const products = await getAllProductService(params);
+
+  const totalProducts = (await prisma.product.findMany()).length;
+  const totalPages = Math.ceil(totalProducts / perPage);
+
+  return res.render("admin/product/product.ejs", {
+    products,
+    pagination: {
+      page: currentPage,
+      limit: perPage,
+      total: totalProducts,
+      totalPages,
+    },
+  });
 };
 const getAdminOrderPage = async (req: Request, res: Response) => {
   const orders = await prisma.order.findMany({

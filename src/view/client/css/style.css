@@ -1,0 +1,23 @@
+/* Fix pagination vertical layout */
+.pagination {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 5px;
+}
+
+.pagination .page-item .page-link {
+  border-radius: 30px;
+  padding: 6px 12px;
+  color: #333;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #82CD47; /* xanh lá active */
+  border-color: #82CD47;
+  color: white;
+}
+
+.pagination .page-item .page-link:hover {
+  background-color: #e6ffe6; /* hover nhạt */
+  border-color: #82CD47;
+}

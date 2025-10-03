@@ -75,8 +75,7 @@ const handleCreateProduct = async (req: Request, res: Response) => {
       image,
     };
     await handleCreateProductService(params);
-    const products = await getAllProductService();
-    return res.render("admin/product/product.ejs", { products });
+    return res.redirect("/admin/product");
   } catch (error) {
     console.log(error);
   }
@@ -85,8 +84,7 @@ const handleCreateProduct = async (req: Request, res: Response) => {
 const handleDeleteProduct = async (req: Request, res: Response) => {
   const id = req.params.id;
   await prisma.product.delete({ where: { id: +id } });
-  const products = await getAllProductService();
-  return res.render("admin/product/product.ejs", { products });
+  return res.redirect("/admin/product");
 };
 const handleGetUpdateProduct = async (req: Request, res: Response) => {
   const id = req.params.id;
@@ -142,8 +140,7 @@ const handleUpdateProduct = async (req: Request, res: Response) => {
       image,
     };
     await updateProductService(params);
-    const products = await getAllProductService();
-    return res.render("admin/product/product.ejs", { products });
+    return res.redirect("/admin/product");
   } catch (error) {
     console.log(error);
   }

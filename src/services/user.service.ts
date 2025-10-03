@@ -45,9 +45,12 @@ const createUserService = async (params: {
     return Promise.reject(err);
   }
 };
-const getHomePageService = async () => {
+const getHomePageService = async (params: { limit: number; skip: number }) => {
   try {
-    const results = await prisma.user.findMany();
+    const results = await prisma.user.findMany({
+      skip: params.skip,
+      take: params.limit,
+    });
     return results;
   } catch (err) {
     console.log(err);
