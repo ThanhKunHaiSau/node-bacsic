@@ -40,10 +40,14 @@ const handleCreateProductService = async (params: {
 const getAllProductService = async (params: {
   limit: number;
   skip: number;
+  filter?: any;
+  sortP?: any;
 }) => {
   const products = await prisma.product.findMany({
+    where: params.filter,
     take: params.limit || 10,
     skip: params.skip,
+    orderBy: params.sortP,
   });
   if (!products) {
     return [];
