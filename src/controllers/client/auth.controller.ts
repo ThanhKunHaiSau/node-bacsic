@@ -52,9 +52,9 @@ const register = (req: Request, res: Response) => {
 // };
 const postRegister = async (req: Request, res: Response) => {
   const errors = [];
-  const { fullname, email, password, confirmPassword } = req.body as TRegister;
+  const { fullName, email, password, confirmPassword } = req.body as TRegister;
   const oldData = {
-    fullname,
+    fullName,
     email,
     password,
     confirmPassword,
@@ -68,7 +68,7 @@ const postRegister = async (req: Request, res: Response) => {
       oldData,
     });
   }
-  const params = { fullname, email, password };
+  const params = { fullName, email, password };
   await postRegisterService(params);
   return res.render("client/auth/login.ejs", { errors, oldData });
 };

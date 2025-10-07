@@ -7,6 +7,7 @@ import path from "path";
 import passport from "passport";
 import configPassport from "./middleware/passport";
 import session from "express-session";
+import apiRouter from "routes/api";
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
 require("dotenv").config();
@@ -50,7 +51,7 @@ app.use((req, res, next) => {
 getConnection();
 //config router
 initWebRoute(app);
-
+apiRouter(app);
 //seeding data
 initDatabBase();
 //handle not found

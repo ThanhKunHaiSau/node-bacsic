@@ -56,7 +56,7 @@ const passwordSchema = z
 export const TRegisterSchema = z
   .object({
     email: emailSchema,
-    fullname: z
+    fullName: z
       .string()
       .trim()
       .refine((name) => name !== "", { message: "Full name is required!" }),
@@ -73,3 +73,37 @@ export const TRegisterSchema = z
     path: ["confirmPassword"],
   });
 export type TRegister = z.infer<typeof TRegisterSchema>;
+
+export const TCreateUserSchema = z.object({
+  username: z
+    .string()
+    .email()
+    .trim()
+    .refine((str) => str !== "", {
+      message: "please enter username",
+    }),
+  fullName: z
+    .string()
+    .trim()
+    .refine((name) => name !== "", { message: "Full name is required!" }),
+  password: passwordSchema,
+});
+
+export type TCreateUser = z.infer<typeof TCreateUserSchema>;
+
+export const TUpdateUserSchema = z.object({
+  username: z
+    .string()
+    .email()
+    .trim()
+    .refine((str) => str !== "", {
+      message: "please enter username",
+    }),
+  fullName: z
+    .string()
+    .trim()
+    .refine((name) => name !== "", { message: "Full name is required!" }),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+});
+export type TUpdateUser = z.infer<typeof TUpdateUserSchema>;

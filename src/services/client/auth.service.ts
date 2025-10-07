@@ -15,7 +15,7 @@ const checkUserExist = async (email: string) => {
   return true;
 };
 const postRegisterService = async (params: {
-  fullname: string;
+  fullName: string;
   password: string;
   email: string;
 }) => {
@@ -33,7 +33,7 @@ const postRegisterService = async (params: {
       data: {
         username: params.email,
         password: hashPassword,
-        fullName: params.fullname,
+        fullName: params.fullName,
         accountType: ACCOUNT_TYPE.SYSTEM,
         roleId: role.id,
       },
