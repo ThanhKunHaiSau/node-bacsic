@@ -11,10 +11,13 @@ import apiRouter from "routes/api";
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
 require("dotenv").config();
+import cors from "cors";
 const app = express();
 //config req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+
 //config session
 app.use(
   session({

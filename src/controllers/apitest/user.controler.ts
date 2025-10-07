@@ -1,12 +1,17 @@
+import bcrypt from "bcrypt";
 import { prisma } from "config/client";
 import { User } from "controllers/interface/user.interface";
 import { Request, Response } from "express";
 import {
+  AuthSchema,
   TCreateUserSchema,
   TUpdateUserSchema,
 } from "src/validation/auth.validate";
-
+import jwt from "jsonwebtoken";
+import "dotenv/config";
+import { handleLoginUser } from "services/client/auth.service";
 const getAllUser = async (req: Request, res: Response) => {
+  const { user } = req;
   const users = await prisma.user.findMany();
   return res.status(200).json(users);
 };
@@ -69,4 +74,39 @@ const deleteUser = async (req: Request, res: Response) => {
   });
   return res.status(204).send({ messeage: "delete success" });
 };
-export { getAllUser, getUserById, createUser, updateUser, deleteUser };
+
+const handleLogin = async (req: Request, res: Response) => {
+  try {
+    const validate = await AuthSchema.safeParseAsync(req.body);
+    if (!validate.success) {
+      if (!validate.success) {
+        return res
+          .status(400)
+          .json({ message: "Invalid data", errors: validate.error.errors });
+      }
+    }
+    const { username, password } = req.body;
+    const access_token = await handleLoginUser(username, password);
+
+    return res.status(200).json({ data: { access_token } });
+  } catch (error) {
+    return res.status(401).json({
+      data: null,
+      message: error.message,
+    });
+  }
+};
+const fetchAccountAPI = async (req: Request, res: Response) => {
+  const user = req.user;
+
+  return res.status(200).json({ data: { user } });
+};
+export {
+  getAllUser,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  handleLogin,
+  fetchAccountAPI,
+};

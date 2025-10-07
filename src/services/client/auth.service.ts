@@ -1,7 +1,9 @@
+import jwt from "jsonwebtoken";
 import { prisma } from "config/client";
 import bcrypt from "bcrypt";
 import { handleHashPassword } from "services/user.service";
 import { ACCOUNT_TYPE } from "config/constant";
+import "dotenv/config";
 
 const checkUserExist = async (email: string) => {
   const exist = await prisma.user.findFirst({
@@ -70,4 +72,44 @@ const getSumCart = async (id: string) => {
     return total || 0;
   }
 };
-export { checkUserExist, postRegisterService, getRoleUserById, getSumCart };
+const handleLoginUser = async (
+  username: string,
+  password: string
+): Promise<string> => {
+  const user = await prisma.user.findUnique({
+    where: { username },
+    include: {
+      role: true,
+    },
+  });
+  if (!user) {
+    throw new Error(`Not found user: ${username} `);
+  }
+  const compare = await bcrypt.compare(password, user.password);
+  if (!compare) {
+    throw new Error("Wrong password");
+  }
+  // nếu có và đúng mật khẩu thì tao token
+  const payload = {
+    id: user.id,
+    username: user.username,
+    fullname: user.fullName,
+    role: user.role,
+    roleId: user.roleId,
+    accountType: user.accountType,
+    avatar: user.avatar,
+  };
+  const secret = process.env.JWT_SECRET;
+  const expire = process.env.JWT_EXPIRES_IN as any;
+  const access_token = jwt.sign(payload, secret, {
+    expiresIn: expire,
+  }) as string;
+  return access_token;
+};
+export {
+  checkUserExist,
+  postRegisterService,
+  getRoleUserById,
+  getSumCart,
+  handleLoginUser,
+};
