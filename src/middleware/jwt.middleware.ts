@@ -5,7 +5,6 @@ const checkValidJWT = (req: Request, res: Response, next: NextFunction) => {
   const path = req.path;
   const whiteList = ["/login"];
   const isWhiteList = whiteList.some((route) => route === path);
-  console.log("fafafafa", isWhiteList, path);
   if (isWhiteList) {
     next();
     return;

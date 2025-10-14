@@ -9,14 +9,15 @@ import {
 } from "controllers/apitest/user.controler";
 import express, { Express } from "express";
 import { checkValidJWT } from "src/middleware/jwt.middleware";
+import { verifyRoleAdmin } from "src/middleware/verifyRole";
 const router = express.Router();
 
 const apiRouter = (app: Express) => {
-  router.get("/users", getAllUser);
+  router.get("/users", verifyRoleAdmin, getAllUser);
   router.get("/user/:id", getUserById);
-  router.post("/users", createUser);
-  router.put("/update-user/:id", updateUser);
-  router.delete("/users/:id", deleteUser);
+  router.post("/users", verifyRoleAdmin, createUser);
+  router.put("/update-user/:id", verifyRoleAdmin, updateUser);
+  router.delete("/users/:id", verifyRoleAdmin, deleteUser);
 
   // jwt
   router.post("/login", handleLogin);

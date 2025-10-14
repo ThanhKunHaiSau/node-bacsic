@@ -80,9 +80,9 @@ const handleLogin = async (req: Request, res: Response) => {
     const validate = await AuthSchema.safeParseAsync(req.body);
     if (!validate.success) {
       if (!validate.success) {
-        return res
-          .status(400)
-          .json({ message: "Invalid data", errors: validate.error.errors });
+        return res.status(400).json({
+          message: validate.error.errors[0].message,
+        });
       }
     }
     const { username, password } = req.body;
@@ -98,7 +98,6 @@ const handleLogin = async (req: Request, res: Response) => {
 };
 const fetchAccountAPI = async (req: Request, res: Response) => {
   const user = req.user;
-
   return res.status(200).json({ data: { user } });
 };
 export {
