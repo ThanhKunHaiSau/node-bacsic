@@ -12,7 +12,15 @@ import "dotenv/config";
 import { handleLoginUser } from "services/client/auth.service";
 const getAllUser = async (req: Request, res: Response) => {
   const { user } = req;
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      username: true,
+      fullName: true,
+      address: true,
+      phone: true,
+    },
+  });
   return res.status(200).json(users);
 };
 const getUserById = async (req: Request, res: Response) => {
