@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 //connect to db
 getConnection();
 //config router
-initWebRoute(app);
+// initWebRoute(app);
 apiRouter(app);
 //seeding data
 initDatabBase();

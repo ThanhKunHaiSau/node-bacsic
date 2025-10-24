@@ -114,6 +114,9 @@ const initWebRoute = (app: Express) => {
   router.get("/thanks", getThanksPage);
   router.get("/histories", getPageHistory);
 
+
+
+  
   app.use("/", verifyRoleAdmin, router);
 };
 

@@ -7,6 +7,7 @@ import {
   handleLogin,
   updateUser,
 } from "controllers/apitest/user.controler";
+import { getDashboardPage } from "controllers/react/admin/dashboard";
 import express, { Express } from "express";
 import { checkValidJWT } from "src/middleware/jwt.middleware";
 import { verifyRoleAdmin } from "src/middleware/verifyRole";
@@ -22,6 +23,9 @@ const apiRouter = (app: Express) => {
   // jwt
   router.post("/login", handleLogin);
   router.get("/account", fetchAccountAPI);
+  //admin
+  router.get("/admin", getDashboardPage);
+
   app.use("/api/v1", checkValidJWT, router);
 };
 export default apiRouter;
